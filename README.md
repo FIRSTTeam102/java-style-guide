@@ -47,7 +47,7 @@ Import statements must not be line-wrapped, and should be ordered as such (each 
 6. Java imports
 
 ## 2.4 Class Declaration
-Each top-level class must reside in its own source file, named accordingly. There must be no more than one top-level class in each file. (example, the top-level class `SwerveModule` resides in `SwerveModule.java`
+Each top-level class must reside in its own source file, named accordingly. There must be no more than one top-level class in each file. (example, the top-level class `SwerveModule` resides in `SwerveModule.java`)
 
 ### 2.4.1 Class Member Ordering
 The ordering of the members of a class can have a great effect on learnability, but there is no single correct recipe for how to do it. Different classes may order their members differently.
@@ -99,6 +99,24 @@ public void updateInputs(IntakeIOInputs inputs) {
 ```
 If the inputs are defined within a separate IO file, the object initialization should be omitted and instead the inputs object should be initialized within the subsystem file.
 
+### 2.4.1 Getters and Setters
+Private member variables with getter and setter methods must have those methods defined with the `@Getter` and `@Setter` annotations provided by lombok
+```java
+/*Compliant with 2.4.1*/
+@Getter
+private double readOnlyValue = 0.0;
+
+/*Non-compliant with 2.4.1*/
+private double readOnlyValue = 0.0;
+
+public double getReadOnlyValue() {
+  return readOnlyValue;
+}
+```
+
+#### 2.4.1.1 Edge case: transformed data
+Getter and setter methods that transform the data in some way or perform some side-effect are exempt from rule 2.4.1, and should be placed in their own methods for readability.
+
 # 3 Project Organization
 All source code (files with a `.java` extension) must be contained within `src/main/java/frc/robot`. No source files can be placed any levels up from this folder. Unless otherwise noted, this folder will be treated as the source code root folder for the rest of this section. (Example: A reference to the `/subsystems/` folder actually refers to `src/main/java/frc/robot/subsystems/`)
 
@@ -115,7 +133,43 @@ If a command's main function is related to a single subsystem, such as only movi
 ### 3.1.2 Organize by Purpose
 If a command's main function is related to a single purpose/action, and uses multiple subsystems in a way where one is not clearly the most relevant, it should be in a folder that relates to its purpose.
 
-`/commands/scoring/SetScoringPosition.java` from [2023](https://github.com/FIRSTTeam102/robot2023)
+`/commands/scoring/SetScoringPosition.java` from [2023](https://github.com/FIRSTTeam102/robot2023) and [2024](https://github.com/FIRSTTeam102/robot2024)
 
 ### 3.1.3 Autos on their Own
 Autonomous routines and commands and methods only used in autonomous should be placed either in their own file (`/commands/Autos.java` or something similar), or within the folder `/commands/auto/` if there is a large number of autonomous-related commands.
+
+When using PathPlanner, named commands and autos should be registered in `RobotContainer.java`
+
+## 3.2 Subsystems
+All files whose top-level class is a **subsystem** (either extending `SubsystemBase` or conceptually analagous to a WPILib `Subsystem`) must be placed within the `/subsystem/` folder.
+
+### 3.2.1 Related files
+Files that are core to a subsystem's functionality but do not either
+
+1. Contain the main class of the subsystem; or
+2. Are not the associated constants file, as covered in section 3.3
+
+Must be placed either in a subfolder of `/subsystems/` named appropriately, or in the `/io/` folder. This decision should be made based on whatever enhances readability the most. 
+
+(*NOTE*: The `/io/` folder must, as named, be exclusively used for interfaces and classes that deal with IO. IO interfaces/classes can be placed in a `/subsystems/` subfolder, but non-IO interfaces/classes cannot be placed in `/io/`)
+
+`subsystems/swerve/*.java` and `io/*VisionIO.java` from [2024](https://github.com/FIRSTTeam102/robot2024)
+
+## 3.3 Constants
+Important constants such as motor IDs, PID/FF constants, enums, record definitions, etc. should be defined in a separate file contained within the `/constants/` folder. These files should deal with a specific portion of the general code only and be named accordingly, with the format `**SUBJECT**Constants.java`, where \*\*SUBJECT** is a single, capitalized noun to describe the file. What the \*\*SUBJECT** is will be described in the following rules.
+
+### 3.3.1 Organize by Subsystem
+If constants are related by a common subsystem, they should all be placed in a file named after the subsystem
+
+`constants/IntakeConstants.java`, `constants/ShooterConstants.java` from [2024](https://github.com/FIRSTTeam102/robot2024)
+
+### 3.3.2 Organize by Topic
+If constants are related by a common topic, they should be placed in a file named after that topic
+
+`constants/ScoringConstants.java` from [2024](https://github.com/FIRSTTeam102/robot2024)
+
+### 3.3.3 Universal Constants
+One file, `constants/Constants.java`, should contain constants that are relevant to the entire robot, not a specific subsystem/topic.
+
+## 3.4 Utilities
+Classes, static methods, and more that have utility functionality that are generally relevant to the robot should be placed within the `/util/` folder. There is no specific naming convention for the files/classes contained within this folder.
