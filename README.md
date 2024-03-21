@@ -59,14 +59,14 @@ If a class has an overloaded constructor or method, they must appear sequentiall
 ```java
 /* more specific constructor */
 public SetIntakeSpeed(Intake intake, double speed, boolean isIndexing) {
-  this.speed = speed;
-  this.intake = intake;
-  this.isIndexing = isIndexing;
-  addRequirements(intake);
+	this.speed = speed;
+	this.intake = intake;
+	this.isIndexing = isIndexing;
+	addRequirements(intake);
 }
 /* constructor that provides a default speed placed second */
 public SetIntakeSpeed(Intake intake, boolean isIndexing) {
-  this(intake, isIndexing ? IntakeConstants.indexSpeed : IntakeConstants.intakeSpeed, isIndexing);
+	this(intake, isIndexing ? IntakeConstants.indexSpeed : IntakeConstants.intakeSpeed, isIndexing);
 }
 ```
 If the constructors/methods are not used for this purpose, order them in the most logical sequence.
@@ -80,21 +80,21 @@ All 3 required declarations/initializations for AdvantageKit input logging shoul
 ```java
 @AutoLog
 public static class IntakeIOInputs {
-  public double current_A = 0.0;
-  public double voltage_V = 0.0;
-  public double tempature_C = 0.0;
-  public double percentOutput = 0.0;
-  public boolean noteSensor = false;
+	public double current_A = 0.0;
+	public double voltage_V = 0.0;
+	public double tempature_C = 0.0;
+	public double percentOutput = 0.0;
+	public boolean noteSensor = false;
 }
 
 public IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
 public void updateInputs(IntakeIOInputs inputs) {
-  inputs.current_A = motor.getOutputCurrent();
-  inputs.voltage_V = motor.getBusVoltage();
-  inputs.tempature_C = motor.getMotorTemperature();
-  inputs.percentOutput = motor.getAppliedOutput();
-  inputs.noteSensor = !noteSensor.get();
+	inputs.current_A = motor.getOutputCurrent();
+	inputs.voltage_V = motor.getBusVoltage();
+	inputs.tempature_C = motor.getMotorTemperature();
+	inputs.percentOutput = motor.getAppliedOutput();
+	inputs.noteSensor = !noteSensor.get();
 }
 ```
 If the inputs are defined within a separate IO file, the object initialization should be omitted and instead the inputs object should be initialized within the subsystem file.
@@ -110,7 +110,7 @@ private double readOnlyValue = 0.0;
 private double readOnlyValue = 0.0;
 
 public double getReadOnlyValue() {
-  return readOnlyValue;
+	return readOnlyValue;
 }
 ```
 
@@ -173,3 +173,48 @@ One file, `constants/Constants.java`, should contain constants that are relevant
 
 ## 3.4 Utilities
 Classes, static methods, and more that have utility functionality that are generally relevant to the robot should be placed within the `/util/` folder. There is no specific naming convention for the files/classes contained within this folder.
+
+# 4 Formatting
+
+## 4.1 Terminology Notes
+- Braces: `{}`
+- Brackets: `[]`
+- Block-like construct: the body of a class, method or constructor.
+
+## 4.1 Braces
+
+### 4.1.1 Single-line braces are optional
+Single-line `if`, `else`, `for`, `do`, and `while` statements can have their braces ommitted if it enhances readability.
+
+### 4.2.2 Non-empty blocks: K & R style
+Braces follow the K & R style for *non-empty* blocks and block-like constructs:
+
+- No line break before the opening brace
+- Line break after the opening brace
+- Line break before the closing brace.
+- Line break after the closing brace if that brace terminates a statement or the body of a method, constructor or named class. For example, there is no line break after the brace if it is followed by else or a comma.
+
+```java
+public class TestClass {
+	public static void method(boolean condition) {
+		if (condition) {
+			doSomething();
+		} else {
+			doSomethingElse();
+		}
+	}
+}
+```
+
+### 4.2.3 Empty blocks: may be concise
+An empty block or block-like construct may be closed immediately after being opened, with no spaces or line breaks in-between the braces.
+
+```java
+public void doNothing() {}
+```
+
+## 4.2 Block indentation: one tab
+Each time a new block or block-like construct is opened, the indent increases by one tab. When the block ends, the indent decreases by one tab, as seen in the 4.2.2 example.
+
+## 4.3 One statement per line
+Every statement must be followed by a line break.
