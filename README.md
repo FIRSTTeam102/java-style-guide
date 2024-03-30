@@ -180,6 +180,17 @@ Classes, static methods, and more that have utility functionality that are gener
 - Braces: `{}`
 - Brackets: `[]`
 - Block-like construct: the body of a class, method or constructor.
+- Logical units: Multiple lines of code that fit together logically or contextually.
+- Horizontal alignment: Adding extra whitespace to lines to make certain tokens appear below other tokens
+```java
+// No alignment
+private int x;
+private String str;
+
+// alignment
+private int    x;
+private String str;
+```
 
 ## 4.2 Braces
 
@@ -222,3 +233,28 @@ Every statement must be followed by a line break.
 ## 4.5 Line Wrapping
 Statements that are very long should be line-wrapped to enhance readability. Each line after the first in a line-wrapped statement should be indented with the standard one tab as described in 4.3.
 
+## 4.6 Whitespace
+
+### 4.6.1 Vertical Whitespace
+A single blank line should appear between *logical units* of code. Spacing out code by logical units helps to improve readability and reduce clutter.
+
+### 4.6.2 Horizontal Whitespace
+Aside where required by Java, a single space must appear in the following situations **only**:
+
+1. Separating any reserved word, such as `if`, `for` or `catch`, from an open parenthesis (`(`) that follows it on that line
+2. Separating any reserved word, such as `else` or `catch`, from a closing curly brace (`}`) that precedes it on that line
+3. Before any open curly brace (`{}`), with two exceptions:
+	- `@SomeAnnotation({a, b})` (no space is used)
+	- `String[][] x = {{"foo"}};` (no space is required between `{{`, by item 8 below)
+4. On both sides of any binary or ternary operator. This also applies to the following "operator-like" symbols
+	- the ampersand in a conjunctive type bound: `<T extends Foo & Bar>`
+	- the pipe for a catch block that handles multiple exceptions: `catch (FooException | BarException e)`
+	- the colon (`:`) in an enhanced `for` ("foreach") statement
+5. After `,`, `:`, or `;` or the closing parenthesis of a typecast (`)`)
+6. After the double slash (`//`) that begins a single line or end-of-line comment.
+7. Between the type and variable of a declaration `List<String> list` 
+8. *Optional* inside both braces of an array initializer
+	- `new int[] {5, 6}` and `new int[] { 5, 6 }` are both valid
+
+### 4.6.3 Horizontal alignment: discouraged
+Horizontal alignment is generally discouraged, and may only be used if it substantially increases the readability of the code.
