@@ -181,9 +181,9 @@ Classes, static methods, and more that have utility functionality that are gener
 - Brackets: `[]`
 - Block-like construct: the body of a class, method or constructor.
 
-## 4.1 Braces
+## 4.2 Braces
 
-### 4.1.1 Single-line braces are optional
+### 4.2.1 Single-line braces are optional
 Single-line `if`, `else`, `for`, `do`, and `while` statements can have their braces ommitted if it enhances readability.
 
 ### 4.2.2 Non-empty blocks: K & R style
@@ -213,8 +213,12 @@ An empty block or block-like construct may be closed immediately after being ope
 public void doNothing() {}
 ```
 
-## 4.2 Block indentation: one tab
+## 4.3 Block indentation: one tab
 Each time a new block or block-like construct is opened, the indent increases by one tab. When the block ends, the indent decreases by one tab, as seen in the 4.2.2 example.
 
-## 4.3 One statement per line
+## 4.4 One statement per line
 Every statement must be followed by a line break.
+
+## 4.5 Line Wrapping
+Statements that are very long should be line-wrapped to enhance readability. Each line after the first in a line-wrapped statement should be indented with the standard one tab as described in 4.3.
+
