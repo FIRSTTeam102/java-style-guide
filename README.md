@@ -258,3 +258,47 @@ Aside where required by Java, a single space must appear in the following situat
 
 ### 4.6.3 Horizontal alignment: discouraged
 Horizontal alignment is generally discouraged, and may only be used if it substantially increases the readability of the code.
+
+## 4.7 Grouping Parentheses: recommended
+Optional grouping parentheses are omitted only when author and reviewer agree that there is no reasonable chance the code will be misinterpreted without them, nor would they have made the code easier to read. It is not reasonable to assume that every reader has the entire Java operator precedence table memorized.
+
+## 4.8 Specific Constructs
+
+### 4.8.1 Enum classes
+Since enum classes are classes, all other rules for formatting classes apply, but there are specific rules for enums:
+
+#### 4.8.1.1 Line breaks: keep it consistent
+For a given enum class, there can be a line break following the comma after each enum constant, or no line-breaks at all. Do not mix and match in one enum declaration, and no more than one line break per constant.
+```java
+/* compliant with 4.8.1.1 */
+public enum Suit { 
+	Clubs, Hearts, Spades, Diamonds 
+}
+
+/* also compliant */
+public enum Suit {
+	Clubs,
+	Hearts,
+	Spades,
+	Diamonds
+}
+
+/* not compliant */
+public enum Suit {
+	Clubs, Hearts,
+	Spades,
+	Diamonds
+}
+```
+
+#### 4.8.1.1 Short enums: may be concise
+An enum with no methods and no documentation on its constants can be formatted like an array initializer
+```java
+/* OK */
+public enum Suit {
+	Clubs, Hearts, Spades, Diamonds
+}
+
+/* also OK */
+public enum Suit { Clubs, Hearts, Spades, Diamonds }
+```
