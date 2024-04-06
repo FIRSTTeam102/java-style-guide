@@ -55,6 +55,18 @@
 - [5 Naming](#5-naming)
 	- [5.1 Terminology Notes](#51-terminology-notes)
 	- [5.2 Shared rules](#52-shared-rules)
+	- [5.3 Units](#53-units)
+	- [5.4 Rules by identifier](#54-rules-by-identifier)
+		- [5.4.1 Packages](#541-packages)
+		- [5.4.2 Classes and interfaces](#542-classes-and-interfaces)
+			- [5.4.2.1 Classes: mostly nouns](#5421-classes-mostly-nouns)
+			- [5.4.2.2 Commands: mostly verbs](#5422-commands-mostly-verbs)
+			- [5.4.2.3 AdvantageKit inputs: called inputs](#5423-advantagekit-inputs-called-inputs)
+			- [5.4.2.4 IO interfaces and implementations](#5424-io-interfaces-and-implementations)
+		- [5.4.3 Methods](#543-methods)
+		- [5.4.4 Constants](#544-constants)
+		- [5.4.5 Fields, variables, and parameters](#545-fields-variables-and-parameters)
+		- [5.4.6 Type variables](#546-type-variables)
 
 
 # 1 Introduction
@@ -440,6 +452,69 @@ The ternary operator should be used for any conditional statement with simple ex
 ## 5.1 Terminology Notes
 - `camelCase`: Each word has its first letter capitalized. The first word is not capitalized. There are no underscores or other characters between words.
 - `PascalCase`: Same as camelCase, but the first word is capitalized.
+- descriptor: An extra word or abbreviation placed after an underscore after the name. For the purposes of this guide, the name and descriptor are considered separate items within the entire identifier, in the form `<name>_<descriptor>`. Descriptors are all lowercase and limited ot a single word or abbreviation.
   
 ## 5.2 Shared rules
 Identifiers use only ASCII letters and digits, and in specific cases described below, underscores.
+
+## 5.3 Units
+Fields, variables, parameters, and other related constructs that have units associated with them must have those units as a descriptor. This is to reduce confusion between units that describe the same physical quantity (feet/s vs m/s, etc.). 
+
+```java
+/* Good examples */
+double voltage_V;
+
+double velocity_mps;
+
+double velocity_rpm;
+
+double position_ft;
+
+/* bad examples */
+double voltage; // no unit, even though may be obvious
+
+double voltage_millivolts; // not abbreviated
+```
+
+## 5.4 Rules by identifier
+
+### 5.4.1 Packages
+Package names are all lowercase, with separate words concatenated together. `com.example.deepspace`, not `com.example.deepSpace`
+
+### 5.4.2 Classes and interfaces
+Class and interface names must be written in PascalCase
+
+#### 5.4.2.1 Classes: mostly nouns
+Subsystems, records, enums, data classes, utilities, and most other classes should generally be named with nouns, such as `Shooter`, `ArmConstants`, `ScoringPosition`, etc.
+
+#### 5.4.2.2 Commands: mostly verbs
+Commands that have a name (e.g., not inline) should generally be named with verbs, such as `SetScoringPosition` or `IntakeWithArm`, but may be named with other terms if more applicable, such as `ManualArmControl` or `XStance`.
+
+#### 5.4.2.3 AdvantageKit inputs: called inputs
+AdvantageKit inputs classes must be named with the name of their enclosing class, with `Inputs` appended at the end, such as `ShooterInputs` and `FieldVisionInputs`.
+
+*(**NOTE**: the 2023 and 2024 robot code currently does not comply with this rule, with the suffix instead being `IOInputs`. Continue to use this non-compliant suffix or update all other inputs class names within these projects to maintain consistency.)*
+
+#### 5.4.2.4 IO interfaces and implementations
+Interfaces that lay out IO implementations or classes that define IO must have their name suffixed with `IO`, such as `SwerveModuleIO` or `FieldVisionIO`.
+
+The implementations of IO Interfaces must have their name be the interface they are implementing suffixed with a descriptor of the implementation. There are no specific guidelines for this descriptor. Examples include `SwerveModuleIOReal`, `GyroIOPigeon2`, and `SwerveModuleIOSim`.
+
+### 5.4.3 Methods
+Method names must be written in camelCase, and are generally verbs or verb phrases.
+
+Method identifiers may share names but have descriptors to describe their implementation, such as `estimateScoringPosition_math` and `estimateScoringPosition_map`.
+
+### 5.4.4 Constants
+Since constants reside in their own file, it is relatively obvious when something is a constant or not, and thus they do not require a prefix or other unique characteristic. They should be named just like variables and fields.
+
+### 5.4.5 Fields, variables, and parameters
+Fields, variables, and parameters must be in camelCase, and should generally be nouns or noun phrases.
+
+One character variable names should be avoided, except for very temporary and specific looping variable. If a multi-character name can be used without hurting readability, it should be used.
+
+### 5.4.6 Type variables
+Each type variable is named in one of two styles:
+
+- A single capital letter, optionally followed by a single numeral (such as `E`, `T`, `X`, `T2`)
+- A name in the form used for classes (see [5.4.2](#542-classes-and-interfaces)), followed by the capital letter T (examples: `RequestT`, `FooBarT`).
