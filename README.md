@@ -1,3 +1,62 @@
+- [1 Introduction](#1-introduction)
+	- [1.1 Terminology Notes](#11-terminology-notes)
+		- [1.1.1 Rule Importance Terms](#111-rule-importance-terms)
+	- [1.2 Guide Notes](#12-guide-notes)
+- [2 Source File Structure](#2-source-file-structure)
+	- [2.1 Terminology](#21-terminology)
+	- [2.2 Package Statement](#22-package-statement)
+	- [2.3 Import Statements](#23-import-statements)
+	- [2.4 Class Declaration](#24-class-declaration)
+		- [2.4.1 Class Member Ordering](#241-class-member-ordering)
+			- [2.4.1.1 Overloads: never split](#2411-overloads-never-split)
+			- [2.4.1.2 AdvantageKit ordering](#2412-advantagekit-ordering)
+		- [2.4.1 Getters and Setters](#241-getters-and-setters)
+			- [2.4.1.1 Edge case: transformed data](#2411-edge-case-transformed-data)
+- [3 Project Organization](#3-project-organization)
+	- [3.1 Commands](#31-commands)
+		- [3.1.1 Organize by Subsystem](#311-organize-by-subsystem)
+		- [3.1.2 Organize by Purpose](#312-organize-by-purpose)
+		- [3.1.3 Autos on their Own](#313-autos-on-their-own)
+	- [3.2 Subsystems](#32-subsystems)
+		- [3.2.1 Related files](#321-related-files)
+	- [3.3 Constants](#33-constants)
+		- [3.3.1 Organize by Subsystem](#331-organize-by-subsystem)
+		- [3.3.2 Organize by Topic](#332-organize-by-topic)
+		- [3.3.3 Universal Constants](#333-universal-constants)
+	- [3.4 Utilities](#34-utilities)
+- [4 Formatting](#4-formatting)
+	- [4.1 Terminology Notes](#41-terminology-notes)
+	- [4.2 Braces](#42-braces)
+		- [4.2.1 Single-line braces are optional](#421-single-line-braces-are-optional)
+		- [4.2.2 Non-empty blocks: K \& R style](#422-non-empty-blocks-k--r-style)
+		- [4.2.3 Empty blocks: may be concise](#423-empty-blocks-may-be-concise)
+	- [4.3 Block indentation: one tab](#43-block-indentation-one-tab)
+	- [4.4 One statement per line](#44-one-statement-per-line)
+	- [4.5 Line Wrapping](#45-line-wrapping)
+	- [4.6 Whitespace](#46-whitespace)
+		- [4.6.1 Vertical Whitespace](#461-vertical-whitespace)
+		- [4.6.2 Horizontal Whitespace](#462-horizontal-whitespace)
+		- [4.6.3 Horizontal alignment: discouraged](#463-horizontal-alignment-discouraged)
+	- [4.7 Grouping Parentheses: recommended](#47-grouping-parentheses-recommended)
+	- [4.8 Specific Constructs](#48-specific-constructs)
+		- [4.8.1 Enum classes](#481-enum-classes)
+			- [4.8.1.1 Line breaks: keep it consistent](#4811-line-breaks-keep-it-consistent)
+			- [4.8.1.2 Short enums: may be concise](#4812-short-enums-may-be-concise)
+		- [4.8.2 Variable declaration](#482-variable-declaration)
+			- [4.8.2.1 One variable per declaration](#4821-one-variable-per-declaration)
+			- [4.8.2.2 Declared when needed, initialized ASAP](#4822-declared-when-needed-initialized-asap)
+		- [4.8.3 Arrays](#483-arrays)
+			- [4.8.3.1 No C-style declarations](#4831-no-c-style-declarations)
+		- [4.8.4 Switch statements and expressions](#484-switch-statements-and-expressions)
+			- [4.8.4.1 Expressions only](#4841-expressions-only)
+			- [4.8.4.2 Default case omitted if exhaustive](#4842-default-case-omitted-if-exhaustive)
+		- [4.8.5 Modifiers](#485-modifiers)
+		- [4.8.6 Ternary operators](#486-ternary-operators)
+- [5 Naming](#5-naming)
+	- [5.1 Terminology Notes](#51-terminology-notes)
+	- [5.2 Shared rules](#52-shared-rules)
+
+
 # 1 Introduction
 This document will serve as a list of conventions and recommendations for working with WPILib Java and other libraries as a member of Team 102. This guide is heavily based on [WPILib's Java Style Guide](https://github.com/wpilibsuite/styleguide/) and our original [C++ style guide](https://github.com/FIRSTTeam102/cpp-style-guide/), with modifications based on our evolving conventions and practices. This is a guide, not a set of laws. If anything is unclear, use your best judgement and then contact the programming lead with the question. They will decide the correct styling and add it to this guide if necessary.
 
@@ -291,8 +350,8 @@ public enum Suit {
 }
 ```
 
-#### 4.8.1.1 Short enums: may be concise
-An enum with no methods and no documentation on its constants can be formatted like an array initializer
+#### 4.8.1.2 Short enums: may be concise
+An enum with no methods and no documentation on its constants may be formatted like an array initializer
 ```java
 /* OK */
 public enum Suit {
@@ -302,3 +361,85 @@ public enum Suit {
 /* also OK */
 public enum Suit { Clubs, Hearts, Spades, Diamonds }
 ```
+
+### 4.8.2 Variable declaration
+
+#### 4.8.2.1 One variable per declaration
+Every variable declaration (field or local) declares only one variable: declarations such as `int a, b;` are not used.
+
+#### 4.8.2.2 Declared when needed, initialized ASAP
+Local variables must **not** be habitually declared at the start of their containing block or block-like construct. Instead, local variables should be declared close to the point they are first used (within reason) to minimize their scope. Local variable declarations should have initializers, or be initialized immediately after declaration.
+
+### 4.8.3 Arrays
+Arrays must be declared with the same formatting as [enums](#4811-line-breaks-keep-it-consistent).
+
+```java
+/* OK */
+new int[] {0, 1, 2, 3};
+
+new int[] {
+	0, 1, 2, 3
+};
+
+new int[] {
+	0,
+	1,
+	2,
+	3
+};
+
+/* not OK */
+new int[] {
+	0, 1,
+	2, 3
+};
+```
+
+#### 4.8.3.1 No C-style declarations
+Square brackets must be a part of the *type*, not the variable name. `String[] args`, not `String args[]`.
+
+### 4.8.4 Switch statements and expressions
+
+#### 4.8.4.1 Expressions only
+The modern switch expression syntax must be used instead of the classic switch statement syntax.
+
+```java
+/* Statements: NOT ok */
+switch (alliance.get()) {
+	case Red:
+		redAllianceFunc();
+		break;
+	case Blue:
+		blueAllianceFunc();
+		break;
+	default:
+		break;
+}
+
+/* Expressions: OK */
+switch (alliance.get()) {
+	case Red -> redAllianceFunc();
+	case Blue -> blueAllianceFunc();
+}
+```
+
+#### 4.8.4.2 Default case omitted if exhaustive
+The `default` case expression group may be omitted if the switch statement covers all possible values of the input (e.g., is exhaustive)
+
+### 4.8.5 Modifiers
+Class and member modifiers, when present, appear in the order recommended by the Java Language Specification
+```java
+public protected private abstract static final transient volatile synchronized native strictfp
+```
+
+### 4.8.6 Ternary operators
+The ternary operator should be used for any conditional statement with simple expressions (simple operations, return value switch, etc.). Ternary operators may not be nested.
+
+# 5 Naming
+
+## 5.1 Terminology Notes
+- `camelCase`: Each word has its first letter capitalized. The first word is not capitalized. There are no underscores or other characters between words.
+- `PascalCase`: Same as camelCase, but the first word is capitalized.
+  
+## 5.2 Shared rules
+Identifiers use only ASCII letters and digits, and in specific cases described below, underscores.
