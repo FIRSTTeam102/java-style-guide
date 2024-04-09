@@ -10,8 +10,6 @@
 		- [2.4.1 Class Member Ordering](#241-class-member-ordering)
 			- [2.4.1.1 Overloads: never split](#2411-overloads-never-split)
 			- [2.4.1.2 AdvantageKit ordering](#2412-advantagekit-ordering)
-		- [2.4.1 Getters and Setters](#241-getters-and-setters)
-			- [2.4.1.1 Edge case: transformed data](#2411-edge-case-transformed-data)
 - [3 Project Organization](#3-project-organization)
 	- [3.1 Commands](#31-commands)
 		- [3.1.1 Organize by Subsystem](#311-organize-by-subsystem)
@@ -67,6 +65,24 @@
 		- [5.4.4 Constants](#544-constants)
 		- [5.4.5 Fields, variables, and parameters](#545-fields-variables-and-parameters)
 		- [5.4.6 Type variables](#546-type-variables)
+- [6 Programming Practices](#6-programming-practices)
+	- [6.1 Annotation usage](#61-annotation-usage)
+		- [6.1.1 @Override: always used](#611-override-always-used)
+		- [6.1.2 @Getter/@Setter: used when applicable](#612-gettersetter-used-when-applicable)
+			- [6.1.2.1 Edge case: transformed data](#6121-edge-case-transformed-data)
+		- [6.1.3 @AutoLogOutput: used where applicable](#613-autologoutput-used-where-applicable)
+	- [6.2 Try/catch blocks: try to avoid](#62-trycatch-blocks-try-to-avoid)
+	- [6.3 Static members: qualified using class](#63-static-members-qualified-using-class)
+	- [6.4 Built-in types](#64-built-in-types)
+	- [6.5 Generated files](#65-generated-files)
+	- [6.6 Utilities](#66-utilities)
+- [7 Comments and Javadoc](#7-comments-and-javadoc)
+	- [7.1 Comments](#71-comments)
+		- [7.1.1 As often as possible](#711-as-often-as-possible)
+		- [7.1.2 Minimize yapping](#712-minimize-yapping)
+	- [7.2 Javadoc](#72-javadoc)
+		- [7.2.1 Exceptions: obvious and self-explanatory members](#721-exceptions-obvious-and-self-explanatory-members)
+		- [7.2.2 Eception: overrides](#722-eception-overrides)
 
 
 # 1 Introduction
@@ -169,24 +185,6 @@ public void updateInputs(IntakeIOInputs inputs) {
 }
 ```
 If the inputs are defined within a separate IO file, the object initialization should be omitted and instead the inputs object should be initialized within the subsystem file.
-
-### 2.4.1 Getters and Setters
-Private member variables with getter and setter methods must have those methods defined with the `@Getter` and `@Setter` annotations provided by lombok
-```java
-/*Compliant with 2.4.1*/
-@Getter
-private double readOnlyValue = 0.0;
-
-/*Non-compliant with 2.4.1*/
-private double readOnlyValue = 0.0;
-
-public double getReadOnlyValue() {
-	return readOnlyValue;
-}
-```
-
-#### 2.4.1.1 Edge case: transformed data
-Getter and setter methods that transform the data in some way or perform some side-effect are exempt from rule 2.4.1, and should be placed in their own methods for readability.
 
 # 3 Project Organization
 All source code (files with a `.java` extension) must be contained within `src/main/java/frc/robot`. No source files can be placed any levels up from this folder. Unless otherwise noted, this folder will be treated as the source code root folder for the rest of this section. (Example: A reference to the `/subsystems/` folder actually refers to `src/main/java/frc/robot/subsystems/`)
@@ -458,22 +456,22 @@ The ternary operator should be used for any conditional statement with simple ex
 Identifiers use only ASCII letters and digits, and in specific cases described below, underscores.
 
 ## 5.3 Units
-Fields, variables, parameters, and other related constructs that have units associated with them must have those units as a descriptor. This is to reduce confusion between units that describe the same physical quantity (feet/s vs m/s, etc.). 
+Fields, variables, parameters, and other related constructs that have units associated with them must have those units as a descriptor. This is to reduce confusion between units that describe the same physical quantity (feet/s vs m/s, etc.). Use standard abbreviations, and to conform with [5.2](#52-shared-rules), the word 'per' (as in 'feet per second') should be replaced with a `p` in the abbreviation ('feet per second' becomes `ftps`, not `ft/s`).
 
 ```java
 /* Good examples */
-double voltage_V;
+double voltage_V; // Volts
 
-double velocity_mps;
+double velocity_mps; // Meters per second
 
-double velocity_rpm;
+double velocity_rpm; // Rotations per minute
 
-double position_ft;
+double position_ft; // Feet
 
 /* bad examples */
 double voltage; // no unit, even though may be obvious
 
-double voltage_millivolts; // not abbreviated
+double voltage_millivolts; // not abbreviated, should be mV
 ```
 
 ## 5.4 Rules by identifier
@@ -518,3 +516,96 @@ Each type variable is named in one of two styles:
 
 - A single capital letter, optionally followed by a single numeral (such as `E`, `T`, `X`, `T2`)
 - A name in the form used for classes (see [5.4.2](#542-classes-and-interfaces)), followed by the capital letter T (examples: `RequestT`, `FooBarT`).
+
+# 6 Programming Practices
+
+## 6.1 Annotation usage
+A general rule of thumb is that, whenever an annotation can be used in a way to reduce code clutter, it should be used. Of course, readability is prioritized, and if an annotation will make a piece of code *more* difficult to read, its use should be discarded.
+
+### 6.1.1 @Override: always used
+A method is marked with the `@Override` annotation whenever it is legal. This includes a class method overriding a superclass method, a class method implementing an interface method, and an interface method respecifying a superinterface method.
+
+### 6.1.2 @Getter/@Setter: used when applicable
+Private member variables with getter and setter methods must have those methods defined with the `@Getter` and `@Setter` annotations provided by lombok
+```java
+/*Compliant with 6.1.2*/
+@Getter
+private double readOnlyValue = 0.0;
+
+/*Non-compliant with 6.1.2*/
+private double readOnlyValue = 0.0;
+
+public double getReadOnlyValue() {
+	return readOnlyValue;
+}
+```
+
+#### 6.1.2.1 Edge case: transformed data
+Getter and setter methods that transform the data in some way or perform some side-effect are exempt from rule [6.1.2](#612-gettersetter-used-when-applicable), and should be placed in their own methods for readability.
+
+### 6.1.3 @AutoLogOutput: used where applicable
+When a field should be logged as-is as a RealOutput in AdvantageKit, the `@AutoLogOutput` annotation should be used rather than `Logger.recordOutput()` being called in `periodic()`.
+
+```java
+public class Example extends SubsystemBase {
+	/* compliant with 6.1.3 */
+	@AutoLogOutput
+	private double loggedOutput = 0.0;
+
+	/* not compliant */
+	private double loggedOutput2 = 0.0;
+	@Override
+	public void periodic() {
+		Logger.recordOutput("Example/loggedOutput2", loggedOutput2);
+	}
+}
+```
+
+## 6.2 Try/catch blocks: try to avoid
+Try/catch blocks are only permitted if there is no other way to do something. In all other cases, they should be avoided.
+
+(***NOTE:*** *if you are tempted to use a try/catch block, think deeply about whether you should be doing what you're trying to do in the first place. Only after going through this process multiple times should you ever entertain the thought of using one.*)
+
+## 6.3 Static members: qualified using class
+When a reference to a static class member must be qualified, it is qualified with that class's name, not with a reference or expression of that class's type.
+
+```java
+Foo aFoo = ...;
+
+Foo.aStaticMethod(); // good
+aFoo.aStaticMethod(); // bad
+somethingThatYieldsAFoo().aStaticMethod(); // very bad
+```
+
+## 6.4 Built-in types
+WPILib uses `int` for user-facing interfaces instead of `byte` to avoid casts. `double` is should be used everywhere instead of `float` for consistency unless absolutely necessary.
+
+## 6.5 Generated files
+Since changes would be overwritten upon regeneration, generated files such as `BuildConstants.java` and `*.auto` files must not be manually edited.
+
+## 6.6 Utilities
+As noted in [3.4](#34-utilities), any utility methods, classes, etc. should be placed within an appropriately named file in the `/utils/` directory. Creation of utilities is recommended, and any general methods that do not have direct relation with a subsystem or command should be categorized as utilities.
+
+# 7 Comments and Javadoc
+
+## 7.1 Comments
+Comments should generally be full line or end-of-line with double slashes (`//`). 
+
+### 7.1.1 As often as possible
+Whenever the implementation of a method is anything less than incredibly obvious/self-explanatory, or additional notes need to be provided for future reviewers, descriptive comments must be added. Implementation comments should accurately walk through the thought process and program flow in a given implementation, so that a future reviewer can get into the original developer's mindset.
+
+### 7.1.2 Minimize yapping
+Extraneous comments, jokes, self-deprecation, and more are not permitted to be part of any comments. Implemetation comments and comments that provide helpful notes should be concise and professional, without extraneous language.
+
+## 7.2 Javadoc
+At the *minimum*, Javadoc is present for every `public` class, and every `public` or `protected` member of a class, with a few exceptions noted below.
+
+Other classes and methods still have Javadoc as needed. Whenever an implementation comment would be used to define the overall purpose or behavior of a class, method or field, that comment is written as Javadoc instead. (It's more uniform, and more tool-friendly.)
+
+### 7.2.1 Exceptions: obvious and self-explanatory members
+Javadoc is optional for simple, obvious methods like getters and setters, where there `really and truly` is nothing better to say than "Returns the thing".
+
+*(**NOTE:**) It is not appropriate to cite this exception to justify omitting relevant information that a typical reader might need to know. For example, for a method named `getCanonicalName`, don't omit its documentation (with the rationale that it would say only `/** Returns the canonical name. */`) if a typical reader may have no idea what the term "canonical name" means!*
+
+### 7.2.2 Eception: overrides
+Javadoc does not need to be present on a method that overrides a supertype method.
