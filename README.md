@@ -450,7 +450,7 @@ The ternary operator should be used for any conditional statement with simple ex
 ## 5.1 Terminology Notes
 - `camelCase`: Each word has its first letter capitalized. The first word is not capitalized. There are no underscores or other characters between words.
 - `PascalCase`: Same as camelCase, but the first word is capitalized.
-- descriptor: An extra word or abbreviation placed after an underscore after the name. For the purposes of this guide, the name and descriptor are considered separate items within the entire identifier, in the form `<name>_<descriptor>`. Descriptors are all lowercase and limited ot a single word or abbreviation.
+- descriptor: An extra word or abbreviation placed after an underscore after the name. For the purposes of this guide, the name and descriptor are considered separate items within the entire identifier, in the form `<name>_<descriptor>`. Descriptors are all lowercase and limited to a single word or abbreviation.
   
 ## 5.2 Shared rules
 Identifiers use only ASCII letters and digits, and in specific cases described below, underscores.
