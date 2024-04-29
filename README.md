@@ -314,7 +314,7 @@ Aside where required by Java, a single space must appear in the following situat
 2. Separating any reserved word, such as `else` or `catch`, from a closing curly brace (`}`) that precedes it on that line
 3. Before any open curly brace (`{}`), with two exceptions:
 	- `@SomeAnnotation({a, b})` (no space is used)
-	- `String[][] x = {{"foo"}};` (no space is required between "{{", by item 8 below)
+	- `String[][] x = {{"foo"}};` (no space is required between `{{` or `}}`, by item 8 below)
 4. On both sides of any binary or ternary operator. This also applies to the following "operator-like" symbols
 	- the ampersand in a conjunctive type bound: `<T extends Foo & Bar>`
 	- the pipe for a catch block that handles multiple exceptions: `catch (FooException | BarException e)`
