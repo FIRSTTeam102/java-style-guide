@@ -1,5 +1,6 @@
 # Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [1 Introduction](#1-introduction)
 	- [1.1 Terminology Notes](#11-terminology-notes)
 		- [1.1.1 Rule Importance Terms](#111-rule-importance-terms)
@@ -76,6 +77,7 @@
 	- [6.2 Try/catch blocks: try to avoid](#62-trycatch-blocks-try-to-avoid)
 	- [6.3 Static members: qualified using class](#63-static-members-qualified-using-class)
 	- [6.4 Built-in types](#64-built-in-types)
+		- [6.4.1 Numerical Values](#641-numerical-values)
 	- [6.5 Generated files](#65-generated-files)
 	- [6.6 Utilities](#66-utilities)
 - [7 Comments and Javadoc](#7-comments-and-javadoc)
@@ -656,7 +658,13 @@ somethingThatYieldsAFoo().aStaticMethod(); // very bad
 
 ## 6.4 Built-in types
 
-WPILib uses `int` for user-facing interfaces instead of `byte` to avoid casts. `double` is should be used everywhere instead of `float` for consistency unless absolutely necessary.
+WPILib uses `int` for user-facing interfaces instead of `byte` to avoid casts. 
+
+### 6.4.1 Numerical Values
+
+Java's default data type for all numerical values which include a decimal (i.e. 24.5) is `double`, which should be used instead of `float` for consistency unless absolutely necessary. 
+
+**IMPORTANT:** ALWAYS include a decimal place when entering a numerical value within a `double`, and especially when performing calculations within a double. For example `1/21` should be entered as `1.0/21.0`. This is because Java will identify a whole number without a decimal as an integer (type `int`) by default, which may result in errors in calculation - in the examples above, `1/21` results in the value of `0` (zero) where we would most likely prefer the result of `1.0/21.0` which produces `0.0476190476190476`. 
 
 ## 6.5 Generated files
 
